@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="js/animate.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ::marker {
+            font-size: 0em;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .fl {
+            float: left;
+        }
+
+        .focus ul li {
+            float: left;
+        }
+
+        .focus ul {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 600%;
+        }
+
+        .w {
+            width: 1300px;
+            margin: auto;
+        }
+
+        div {
+            display: block;
+        }
+
+        .main {
+            width: 800px;
+            height: 1200px;
+            margin-left: 219px;
+            margin-top: 10px;
+        }
+
+        .focus {
+            position: relative;
+            width: 721px;
+            height: 455px;
+            background-color: purple;
+            overflow: hidden;
+        }
+
+        .arrow-l,
+        .arrow-r {
+            display: none;
+            position: absolute;
+            top: 50%;
+            margin-top: -20px;
+            width: 24px;
+            height: 40px;
+            background: rgba(0, 0, 0, .3);
+            text-align: center;
+            line-height: 40px;
+            color: #fff;
+            font-family: 'icomoon';
+            font-size: 18px;
+            z-index: 2;
+        }
+
+        .arrow-r {
+            right: 0;
+        }
+
+        .circle li {
+            float: left;
+            width: 8px;
+            height: 8px;
+            /*background-color: #fff;*/
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            margin: 0 3px;
+            border-radius: 50%;
+            /*鼠标经过显示小手*/
+            cursor: pointer;
+        }
+
+
+        .focus {
+            position: relative;
+            width: 960px;
+            height: 800px;
+            background-color: purple;
+            overflow: hidden;
+        }
+
+        .focus ul {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 600%;
+        }
+
+        .focus ul li {
+            float: left;
+        }
+
+        .circle {
+            position: absolute;
+            bottom: 10px;
+            left: 50px;
+        }
+
+        .circle li {
+            float: left;
+            width: 8px;
+            height: 8px;
+            /*background-color: #fff;*/
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            margin: 0 3px;
+            border-radius: 50%;
+            /*鼠标经过显示小手*/
+            cursor: pointer;
+        }
+
+        .current {
+            background-color: #fff;
+        }
+    </style>
+    <!-- 这个animate.js 必须写到 index.js的上面引入 -->
+    <!-- <script src="js/animate.js"></script> -->
+</head>
+
+<body>
+    <div class="w">
+        <div class="main">
+            <div class="focus fl">
+                <!-- 左侧按钮 -->
+                <a href="javascript:;" class="arrow-l" style="display: none;">
+                    &lt;
+                </a>
+                <!-- 右侧按钮 -->
+                <a href="javascript:;" class="arrow-r" style="display: none;"> &gt;</a>
+                <!-- 核心的滚动区域 -->
+                <ul>
+                    <li>
+                        <a href="page1.html"><img src="../img/6.png" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="page2.html"><img src="../img/7.png" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="page3.html"><img src="../img/8.png" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="page4.html"><img src="../img/9.png" alt=""></a>
+                    </li>
+
+                    <li>
+                        <a href="page5.html"><img src="../img/10.png" alt=""></a>
+                    </li>
+                </ul>
+                <!-- 小圆圈 -->
+                <ol class="circle">
+                </ol>
+            </div>
+            <script>
+                window.addEventListener('load', () => {
+
+                    //1.获取元素
+                    console.log(this);
+                    let arrow_l = document.querySelector('.arrow-l');
+                    let arrow_r = document.querySelector('.arrow-r');
+                    let focus = document.querySelector('.focus');
+                    let focusWidth = focus.offsetWidth;
+                    //鼠标经过离开事件
+                    focus.addEventListener('mouseenter', () => {
+                        arrow_l.style.display = 'block';
+                        arrow_r.style.display = 'block';
+                        //鼠标经过停止定时器
+                        clearInterval(timer);
+                        timer = null;
+                    })
+                    focus.addEventListener('mouseleave', () => {
+                        arrow_l.style.display = 'none';
+                        arrow_r.style.display = 'none';
+                        //鼠标离开开启定时器
+                        timer = setInterval(() => {
+                            //手动调用事件
+                            arrow_r.click();
+                        }, 2000)
+                    })
+                    //动态生成小圆圈
+                    let ul = focus.querySelector('ul');
+                    let ol = focus.querySelector('.circle')
+                    // console.log(ul.children.length);
+
+                    for (let i = 0; i < ul.children.length; i++) {
+                        //创建小li
+                        let li = document.createElement('li');
+                        //记录当前小圆圈的索引号 通过自定义设定
+                        li.setAttribute('index', i,);
+                        //把小li插入
+                        ol.appendChild(li);
+                        let s = ol.childNodes;
+                        // console.log(s);
+                        let arr = [...s];
+                        console.log(arr);
+
+
+                        //小li 小圆圈的排他思想
+                        //这里箭头函数的this指向自己作用域链的上一层window继承this
+                        // li.addEventListener('click', ()  =>{ 
+
+                        li.addEventListener('click', function () {
+                            s[1].className = 'current';
+                            //干掉所有人 把所有的小li 清除 current 类名
+                            for (let i = 0; i < ol.children.length; i++) {
+                                ol.children[i].className = '';
+                            }
+                            //留下当前的
+                            this.className = 'current';
+                            //点击小圆圈移动 ul图片
+                            //ul 的移动距离 小圆圈的索引号 * 图片的宽度
+                            //点击小li 拿到当前小li的索引号
+                            let index = this.getAttribute('index');
+                            //点击小li 把li 的索引号给num
+                            num = index;
+                            //点击小li 把li 的索引号给circle
+                            circle = index;
+                            console.log(focusWidth);
+                            console.log(index);
+                            animate(ul, -index * focusWidth);
+                        })
+                    }
+                    //把第一个ol 的小li的类名设置 current
+                    ol.children[0].className = 'current';
+                    //克隆第一张图片 放到ul的最后面
+                    let first = ul.children[0].cloneNode(true);
+                    ul.append(first);
+                    //点击右侧按钮滚动图片
+                    let num = 0;
+                    //circle控制小圆圈的变量
+                    let circle = 0;
+                    //flage节流阀 防止快速点击
+                    let flage = true;
+
+                    arrow_r.addEventListener('click', () => {
+                        if (flage) {
+                            flage = false;//关闭节流阀
+                            //如果走到最后复制的图片也就是第一张 我们的ul要快速的复原 left为0
+                            if (num == ul.children.length - 1) {
+                                ul.style.left = 0;
+                                num = 0;
+                            }
+                            num++;
+                            animate(ul, -num * focusWidth, () => {
+                                flage = true//打开节流阀 
+                            });
+                            //点击右侧按钮小圆圈跟着一起变
+                            circle++;
+                            if (circle == ol.children.length) {
+                                circle = 0;
+                            }
+                            circleChange();
+                        }
+                    });
+
+
+                    arrow_l.addEventListener('click', () => {
+                        if (flage) {
+                            flage = false;//关闭节流阀
+                            //如果走到最后复制的图片也就是第一张 我们的ul要快速的复原 left为0
+                            if (num == 0) {
+                                num = ul.children.length - 1;
+                                ul.style.left = - num * focusWidth + 'px';
+                            }
+                            num--;
+                            animate(ul, -num * focusWidth, () => {
+                                flage = true;//打开节流阀
+                            });
+                            //点击右侧按钮小圆圈跟着一起变
+                            circle--;
+                            // if (circle < 0) {
+                            //     circle = ol.children.length - 1;
+                            // }
+                            circle = circle < 0 ? circle = ol.children.length - 1 : circle;
+                            circleChange();
+                        }
+                    });
+
+                    const circleChange = () => {
+                        //先清除其他的小圆圈current类名
+                        for (let i = 0; i < ol.children.length; i++) {
+                            ol.children[i].className = '';
+                        }
+                        //留下当前的小圆圈的clas类为current
+                        ol.children[circle].className = 'current';
+                    }
+                    //自动播放图片定时器
+                    let timer = setInterval(() => {
+                        //手动调用事件
+                        arrow_r.click();
+                    }, 2000);
+
+                    let uls = location.href;
+                    let as = document.querySelector('ol').querySelectorAll('li');
+                    let cs = [...as]
+                    for (let index = 0; index < uls.length; index++) {
+                        if (uls.indexOf(as[index].href != -1)) {
+                            as[1].click();
+                        }
+
+                    }
+                    // (() => {
+                    //     if (document.all) {
+                    //         document.getElementById("aid").click();
+                    //     }
+
+                    //     else {
+                    //         var e = document.createEvent("MouseEvents");
+                    //         e.initEvent("click", true, true);
+                    //         document.getElementById("aid").dispatchEvent(e);
+                    //     }
+                    // })();
+                })
+                // console.log(location.pathname);
+                // console.log(location.port);
+                // console.log(location.replace);
+                // console.log(location.protocol);
+
+            </script>
+</body>
+
+<html>

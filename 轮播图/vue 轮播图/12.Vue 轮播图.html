@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 格式化li圆点 */
+        li {
+            list-style-type: none;
+        }
+
+        .showImg {
+            position: relative;
+            width: 60%;
+            height: 500px;
+            margin: 100px auto;
+            overflow: hidden;
+        }
+
+        /* 图片 */
+        .showImg img {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 箭头 */
+        .iconDiv {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            border: 1px solid #666;
+            border-radius: 15px;
+            background-color: rgba(125, 125, 125, .2);
+            line-height: 30px;
+            text-align: center;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .iconDiv:hover {
+            background-color: white;
+        }
+
+        .icon-left {
+            left: 10px;
+        }
+
+        .icon-right {
+            right: 10px;
+        }
+
+        /* 控制圆点 */
+        .banner-circle {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 20px;
+        }
+
+        .banner-circle ul {
+            margin: 0 50px;
+            height: 100%;
+            text-align: right;
+        }
+
+        .banner-circle ul li {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin: 0 5px;
+            border-radius: 7px;
+            background-color: rgba(125, 125, 125, .8);
+            cursor: pointer;
+        }
+
+        .active {
+            background-color: rgb(20, 218, 59) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="showImg">
+        <!--轮播图片 -->
+        <img @mouseover="changeInterval(true)" @mouseleave="changeInterval(false)" v-for="(item) in imgArr"
+            :key="item.id" :src="item.url" alt="暂无图片" v-show="item.id===currentIndex">
+        <!-- 左侧按钮 -->
+        <div @click="clickIcon('up')" class="iconDiv icon-left">
+            <li class="el-icon-caret-left"></li>
+        </div>
+        <!-- 右侧按钮 -->
+        <div @click="clickIcon('down')" class="iconDiv icon-right">
+            <li class="el-icon-caret-right"></li>
+        </div>
+        <!-- 控制圆点 -->
+        <div class="banner-circle">
+            <ul>
+                <li @click="changeImg(item.id)" v-for="(item) in imgArr" :key="item.id"
+                    :class="item.id===currentIndex? 'active': '' "></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        let app = new Vue({
+            el: '.showImg',
+            data() {
+                return {
+                    currentIndex: 0,
+                    timer: null,
+                    imgArr: [
+                        {
+                            id: 0,
+                            url: "./img/1.jpg",
+                        }, {
+                            id: 1,
+                            url: "./img/2.jpg",
+                        }, {
+                            id: 2,
+                            url: "./img/3.jpg",
+                        }, {
+                            id: 3,
+                            url: "./img/4.jpg",
+                        },
+                        {
+                            id: 4,
+                            url: "./img/5.jpg",
+                        },
+                    ]
+                }
+            },
+            methods: {
+                //开启定时器
+                startInterval() {
+                    // 先清除定时器
+                    clearInterval(this.timer);
+                    this.timer = setInterval(() => {
+                        //开启并改变图片
+                        this.currentIndex++;
+                        if (this.currentIndex > this.imgArr.length - 1) {
+                            this.currentIndex = 0
+                        }
+                    }, 3000)
+                },
+                //右箭头
+                clickIcon(val) {
+                    if (val === 'down') {
+                        this.currentIndex++;
+                        if (this.currentIndex === this.imgArr.length) {
+                            this.currentIndex = 0;
+                        }
+                    } else {
+                        //左箭头
+                        /* 第一种写法
+                        this.currentIndex--;
+                        if(this.currentIndex < 0){
+                            this.currentIndex = this.imgArr.length-1;
+                        } */
+                        // 第二种写法
+                        if (this.currentIndex === 0) {
+                            this.currentIndex = this.imgArr.length;
+                        }
+                        this.currentIndex--;
+                    }
+                },
+                // 点击li圆
+                changeImg(index) {
+                    this.currentIndex = index
+                },
+
+                changeInterval(val) {
+                    if (val) {
+                        //鼠标悬停 关闭
+                        clearInterval(this.timer)
+                    } else {
+                        // 开启
+                        this.startInterval()
+                    }
+                }
+            },
+            //进入页面开启startInterval定时器
+            mounted() {
+                this.startInterval()
+            }
+        })
+
+    </script>
+</body>
+
+</html>
